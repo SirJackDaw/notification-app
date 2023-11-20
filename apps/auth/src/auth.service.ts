@@ -5,12 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { LoginDto } from './dto/login.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Cache } from 'cache-manager';
-
-export type JwtPayload = {
-  id: string;
-  username: string;
-  email: string
-};
+import { JwtPayload } from 'libs/common';
 
 @Injectable()
 export class AuthService {
