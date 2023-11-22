@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule, RmqModule } from 'libs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ListModule } from './list/list.module';
-import { ItemModule } from './item/item.module';
+import { Item } from './entities/item.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { List } from './entities/list.entity';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -13,8 +16,9 @@ import { ItemModule } from './item/item.module';
     RmqModule.register('NOTIFY'),
     RmqModule.register('AUTH'),
     DatabaseModule,
-    ListModule,
-    ItemModule,
+    TypeOrmModule.forFeature([List, Item])
   ],
+  controllers: [AppController],
+  providers: [AppService]
 })
 export class AppModule {}

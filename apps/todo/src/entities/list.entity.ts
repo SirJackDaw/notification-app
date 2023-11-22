@@ -1,6 +1,6 @@
 import { AbstractEntity } from "libs/common";
 import { Column, CreateDateColumn, Entity, OneToMany } from "typeorm";
-import { Item } from "../item/item.entity";
+import { Item } from "./item.entity";
 
 @Entity()
 export class List extends AbstractEntity<List> {
@@ -19,6 +19,6 @@ export class List extends AbstractEntity<List> {
     @CreateDateColumn()
     created_at: Date;
 
-    @OneToMany(() => Item, (item) => item.list)
+    @OneToMany(() => Item, (item) => item.list, { cascade: true })
     items: Item[]
 }
