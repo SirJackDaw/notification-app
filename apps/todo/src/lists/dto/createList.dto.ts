@@ -20,7 +20,7 @@ export class CreateListDto {
 
     @IsArray()
     @IsOptional()
-    @ApiProperty()
+    @ApiProperty({ type: CreateItemDto, isArray: true })
     items: CreateItemDto[]
 
     userId: string;

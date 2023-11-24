@@ -10,6 +10,6 @@ export class Item extends AbstractEntity<Item> {
     @Column({default: false})
     done: boolean;
 
-    @ManyToOne(() => List, (list) => list.items)
+    @ManyToOne(() => List, (list) => list.items, {onDelete: 'CASCADE'})
     list: List
 }

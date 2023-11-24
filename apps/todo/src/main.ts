@@ -9,6 +9,7 @@ async function bootstrap() {
     .setTitle('ToDo service')
     .setDescription('of notification-app monorepo')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
