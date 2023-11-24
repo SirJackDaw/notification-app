@@ -1,4 +1,4 @@
-import { IsDate, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsOptional, IsString } from "class-validator";
 import {ApiProperty} from '@nestjs/swagger'
 
 export class CreateItemDto {
@@ -7,7 +7,7 @@ export class CreateItemDto {
     @ApiProperty()
     text: string;
 
-    @IsDate()
+    @IsBoolean()
     @IsOptional()
     @ApiProperty()
     done?: boolean;

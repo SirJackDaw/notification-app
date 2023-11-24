@@ -7,7 +7,7 @@ import { List } from './entities/list.entity';
 import { CreateListDto } from './dto/createList.dto';
 import { Item } from './entities/item.entity';
 import { UpdateListDto } from './dto/updateList.dto';
-import { CreateItemDto } from './dto/createItem.dto';
+
 @Injectable()
 export class TodoService {
   protected readonly logger = new Logger(TodoService.name)
@@ -46,13 +46,11 @@ export class TodoService {
 
     if (items.length != 0) {
       isDone = true
-      //ещё неплохо сделать сравнение items по текстам
-      dto.items = items.map(
-        (item) => {
-          if (item.done) isDone = isDone && item.done
-          return new Item(item)
-        },
-      );
+      //ещё неплохо сделать сравнение items по текстам  + не удаляет старые items
+      list.items = items.map(item => {
+        isDone = isDone && !!item.done
+        return new Item(item)
+      });
     }
     list.done = isDone
 

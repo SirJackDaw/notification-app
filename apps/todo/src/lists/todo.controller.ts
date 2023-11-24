@@ -35,9 +35,7 @@ export class TodoController {
   @Post('list')
   @ApiBody({ type: CreateListDto })
   createList(@Body() dto: CreateListDto, @CurrentUser() user: JwtPayload) {
-    console.log(user)
     dto.userId = user.id
-    console.log(dto)
     return this.todoService.createList(dto)
   }
 
