@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
+RUN cd apps/todo/ && npx prisma generate
+
 RUN npm run build
 
 FROM node:alpine as production

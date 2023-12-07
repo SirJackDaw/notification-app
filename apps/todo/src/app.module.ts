@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule, RmqModule } from 'libs/common';
+import { RmqModule } from 'libs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TodoModule } from './lists/todo.module';
+import { TodoModule } from './todo/todo.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
