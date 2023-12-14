@@ -19,11 +19,13 @@ import { NotifyService } from './services/notify.service';
       isGlobal: true,
       validationSchema: Joi.object({
         MONGO_URI: Joi.string().required(),
-        APP_PORT: Joi.number().required()
+        RABBIT_MQ_URI: Joi.string().required(),
+        RABBIT_MQ_NOTIFY_QUEUE: Joi.string().required(),
+        RABBIT_MQ_AUTH_QUEUE: Joi.string().required(),
       }),
       envFilePath: './apps/notifications/.env'
     }),
-    // RmqModule,
+    RmqModule,
     RmqModule.register('AUTH'),
     MongoModule,
     MongooseModule.forFeature([

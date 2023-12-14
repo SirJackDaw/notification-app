@@ -22,24 +22,22 @@ services:
     ports:
       - 3000:3000
 
-  # notifications:
-  #   build: 
-  #     context: .
-  #     dockerfile: ./apps/notifications/Dockerfile
-  #     target: development
-  #   command: npm run start:dev notifications
-  #   env_file:
-  #     - ./apps/notifications/.env
-  #   depends_on:
-  #     - rabbitmq
-  #     - mongodb-primary
-  #     - mongodb-secondary
-  #     - mongodb-arbiter
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3001:3000'
+  notifications:
+    build: 
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: npm run start:dev notifications
+    env_file:
+      - ./apps/notifications/.env
+    depends_on:
+      - rabbitmq
+      - mongodb
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3001:3000
 
   todo:
     build: 
@@ -56,7 +54,7 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - '3002:3000'
+      - 3002:3000
 
   mysql:
     image: mysql
@@ -67,7 +65,7 @@ services:
         echo 'CREATE DATABASE IF NOT EXISTS users; CREATE DATABASE IF NOT EXISTS todos;' > /docker-entrypoint-initdb.d/init.sql;
         /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
     ports:
-      - 3308:3308
+      - 3306:3306
 
   redis:
     image: redis:latest
@@ -76,40 +74,13 @@ services:
     ports:
       - 6379:6379
 
-#   mongodb-primary:
-#     image: docker.io/bitnami/mongodb:5.0
-#     environment:
-#       - MONGODB_ADVERTISED_HOSTNAME=mongodb-primary
-#       - MONGODB_REPLICA_SET_MODE=primary
-#       - MONGODB_ROOT_PASSWORD=password123
-#       - MONGODB_REPLICA_SET_KEY=replicasetkey123
-#     volumes:
-#       - 'mongodb_master_data:/bitnami/mongodb'
-#     ports:
-#       - '27017:27017'
+  mongodb:
+    image: mongo:latest
+    volumes:
+      - 'mongodb_master_data:/bitnami/mongodb'
+    ports:
+      - 27017:27017
 
-#   mongodb-secondary:
-#     image: docker.io/bitnami/mongodb:5.0
-#     depends_on:
-#       - mongodb-primary
-#     environment:
-#       - MONGODB_ADVERTISED_HOSTNAME=mongodb-secondary
-#       - MONGODB_REPLICA_SET_MODE=secondary
-#       - MONGODB_INITIAL_PRIMARY_HOST=mongodb-primary
-#       - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=password123
-#       - MONGODB_REPLICA_SET_KEY=replicasetkey123
-
-#   mongodb-arbiter:
-#     image: docker.io/bitnami/mongodb:5.0
-#     depends_on:
-#       - mongodb-primary
-#     environment:
-#       - MONGODB_ADVERTISED_HOSTNAME=mongodb-arbiter
-#       - MONGODB_REPLICA_SET_MODE=arbiter
-#       - MONGODB_INITIAL_PRIMARY_HOST=mongodb-primary
-#       - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=password123
-#       - MONGODB_REPLICA_SET_KEY=replicasetkey123
-
-# volumes:
-#   mongodb_master_data:
-#     driver: local
+volumes:
+  mongodb_master_data:
+    driver: local

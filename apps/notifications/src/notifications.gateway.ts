@@ -1,6 +1,8 @@
-import { Logger } from '@nestjs/common';
+import { Inject, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { ClientProxy } from '@nestjs/microservices';
+import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { catchError, lastValueFrom, map } from 'rxjs';
 import { Socket, Server } from 'socket.io'
 
 @WebSocketGateway({ cors: true })
@@ -9,7 +11,7 @@ export class NotificationGateway implements OnGatewayInit, OnGatewayConnection, 
   server: Server
   private logger: Logger = new Logger('AppGateway')
 
-  constructor(private readonly configService: ConfigService){}
+  constructor(@Inject('AUTH') private authClient: ClientProxy, private readonly configService: ConfigService){}
 
   afterInit(server: Server) {
     this.logger.log('Websocket Server Init')
@@ -20,6 +22,7 @@ export class NotificationGateway implements OnGatewayInit, OnGatewayConnection, 
   }
 
   async handleConnection(socket: Socket, ...args: any[]) {
+    this.logger.log(`connection attempt`)
     const userId = await this.authSocket(socket)
 
     if (!userId) {
@@ -32,9 +35,23 @@ export class NotificationGateway implements OnGatewayInit, OnGatewayConnection, 
   }
 
   async authSocket(socket: Socket): Promise<string> {
-    const token = socket.handshake.auth.token
+    /*
+      Postman can't use this
+      const token = socket.handshake.auth.token
+    */
+    const token = socket.handshake.headers.authorization
+    console.log(token)
 
-    return socket.id
+    const userId = await lastValueFrom(this.authClient.send('validate_user', { Authentication: token})
+      .pipe(
+        map((res) => res),
+        catchError((e) => { this.logger.error(e); return null}),
+      )
+    )
+
+    this.logger.log(userId)
+
+    return userId
   }
 }
 

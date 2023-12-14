@@ -10,32 +10,31 @@ export class TodoService {
     return this.dbService.item.create({ data: createItem })
   }
 
-  async getAll(options: Prisma.ItemFindManyArgs) {
-    const [items, count] = await this.dbService.$transaction([
+  async getAll(options: Prisma.ItemFindManyArgs): Promise<{ data: any, count: number }> {
+    return this.dbService.$transaction([
       this.dbService.item.findMany(options),
       this.dbService.item.count({ where: options.where })
-    ]);
-
-    return { data: items, count }
+    ]).then(result => ({data: result[0], count: result[1]}));
   }
 
-  async findOne(options: Prisma.ItemFindUniqueArgs) {
-    const item = await this.dbService.item.findUnique(options)
+  async findOneById(id: string, userId: string) {
+    const item = await this.dbService.item.findUnique({ where: { id, userId } })
     if (!item) throw new NotFoundException()
     return item
   }
 
   async markItemDone(id: string, userId: string) {
-    const item = await this.findOne({ where: { id, userId } })
+    const item = await this.findOneById(id, userId)
 
     return this.dbService.item.update({ where: { id }, data: { done: !item.done } })
   }
 
-  update(id: string, updateItemDto: Prisma.ItemUpdateInput) {
-    return this.dbService.item.update({ where: {id}, data: updateItemDto })
+  async update(id: string, userId: string, updateItemDto: Prisma.ItemUpdateInput) {
+    await this.findOneById(id, userId)
+    return this.dbService.item.update({ where: { id, userId }, data: updateItemDto })
   }
 
   remove(id: string, userId: string) {
-    return this.dbService.item.delete({where: { id,  userId }})
+    return this.dbService.item.delete({ where: { id,  userId }})
   }
 }

@@ -3,6 +3,7 @@ import { RmqModule } from 'libs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TodoModule } from './todo/todo.module';
 import { DatabaseModule } from './database/database.module';
+import { CronModule } from './cron/cron.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { DatabaseModule } from './database/database.module';
     RmqModule.register('AUTH'),
     DatabaseModule,
     TodoModule,
+    CronModule,
   ],
 })
 export class AppModule {}

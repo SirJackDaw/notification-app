@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { NotificationDto } from '../dto/notification.dto';
 import { NotificationGateway } from '../notifications.gateway';
 import { NotificationsService } from './notifications.service';
+import { NotificationDto } from 'libs/common';
 
 @Injectable()
 export class NotifyService {
@@ -11,9 +11,9 @@ export class NotifyService {
     private readonly gateway: NotificationGateway,
     ) {}
 
-  async notify(notificationData: NotificationDto, event: string) {
+  async notify(notificationData: NotificationDto, event: string = 'notify') {
     return this.notificationService.createNotifications(notificationData).then(notifications => {
-        notifications.forEach(notification => this.gateway.server.to(notification.receiver).emit(event, notification))
+      notifications.forEach(notification => this.gateway.server.to(notification.receiver).emit(event, notification))
     })
   }
 }

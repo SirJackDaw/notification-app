@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { NotificationBodyRepository } from '../repos/notificationBody.repository';
 import { NotificationRepository } from '../repos/notification.repository';
-import { NotificationDto } from '../dto/notification.dto';
 import { Notification } from './../schemas/notificaton.schema';
 import { FilterQuery } from 'mongoose';
+import { NotificationDto } from 'libs/common';
 
 @Injectable()
 export class NotificationsService {

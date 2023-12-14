@@ -1,15 +1,16 @@
 import { IsBoolean, IsDateString, IsOptional, IsString } from "class-validator";
-import {ApiProperty} from '@nestjs/swagger'
+import { ApiProperty } from "@nestjs/swagger";
 
-export class CreateItemDto {
+export class UpdateItemDto {
     @IsString()
+    @IsOptional()
     @ApiProperty()
-    title: string;
+    title?: string;
 
     @IsString()
     @IsOptional()
     @ApiProperty()
-    description: string;
+    description?: string;
 
     @IsDateString()
     @IsOptional()
