@@ -14,7 +14,7 @@ export class TodoService {
     return this.dbService.$transaction([
       this.dbService.item.findMany(options),
       this.dbService.item.count({ where: options.where })
-    ]).then(result => ({data: result[0], count: result[1]}));
+    ]).then(result => ({ data: result[0], count: result[1] }));
   }
 
   async findOneById(id: string, userId: string) {

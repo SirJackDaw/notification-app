@@ -18,6 +18,6 @@ export class CreateItemDto {
 
     @IsBoolean()
     @IsOptional()
-    @ApiProperty()
+    @ApiProperty({default: false})
     done?: boolean;
 }

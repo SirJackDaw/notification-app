@@ -15,7 +15,7 @@ import { CronModule } from './cron/cron.module';
     RmqModule.register('AUTH'),
     DatabaseModule,
     TodoModule,
-    CronModule,
+    CronModule,//needs to be in separate service
   ],
 })
 export class AppModule {}

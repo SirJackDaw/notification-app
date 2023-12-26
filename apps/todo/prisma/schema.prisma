@@ -18,21 +18,13 @@ model Item {
   deadline DateTime?
   done Boolean @default(false)
   createdAt DateTime @default(now())
-  notifyCases ItemsOnCases[]
+  cases NotifyCase[]
 }
 
 model NotifyCase {
   id Int @default(autoincrement()) @id
   name String
   description String
-  items ItemsOnCases[]
+  items Item[]
 }
 
-model ItemsOnCases {
-  item       Item     @relation(fields: [itemId], references: [id])
-  itemId     String
-  case   NotifyCase @relation(fields: [caseId], references: [id])
-  caseId Int
-
-  @@id([itemId, caseId])
-}

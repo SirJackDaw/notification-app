@@ -12,6 +12,7 @@ export class NotifyService {
     ) {}
 
   async notify(notificationData: NotificationDto, event: string = 'notify') {
+    this.logger.log(notificationData)
     return this.notificationService.createNotifications(notificationData).then(notifications => {
       notifications.forEach(notification => this.gateway.server.to(notification.receiver).emit(event, notification))
     })
