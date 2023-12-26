@@ -49,8 +49,6 @@ export class NotificationGateway implements OnGatewayInit, OnGatewayConnection, 
       )
     )
 
-    this.logger.log(userId)
-
     return userId
   }
 }

@@ -15,13 +15,12 @@ export class CronService {
 
   @Cron('* * * * *')
   async notifyDeadlines() {
-    this.logger.log('hey')
     const dateFrom = new Date()
     const dateTo = new Date(Date.now() + this.DATE_OFFSET );
 
     const deadlines = await this.dbService.item.findMany({
       where: { 
-        // deadline: { gte: dateFrom, lte: dateTo }, 
+        deadline: { gte: dateFrom, lte: dateTo }, 
         done: false, 
         NOT: { cases: { some: {id: 1}}}
       },
