@@ -34,6 +34,6 @@ import { NotifyService } from './services/notify.service';
     ])
   ],
   controllers: [NotificationsController, NotifyController],
-  providers: [NotificationsService, NotifyService, NotificationRepository, NotificationBodyRepository, NotificationGateway],
+  providers: [NotificationGateway, NotificationsService, NotifyService, NotificationRepository, NotificationBodyRepository],
 })
 export class NotificationsModule {}

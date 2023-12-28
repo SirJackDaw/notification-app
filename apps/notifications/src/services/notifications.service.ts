@@ -22,9 +22,10 @@ export class NotificationsService {
     return this.notificationRepository.createMany(notifications)
   }
 
-  async getAllNotifications(query) {
-    
-    return this.notificationRepository.find({})
+  async getAllNotifications(filter: FilterQuery<Notification>, limit: number, skip: number) {
+    const notifications = await this.notificationRepository.getMany(filter, limit, skip)
+
+    return notifications
   }
 
   async mark(filter: FilterQuery<Notification>) {

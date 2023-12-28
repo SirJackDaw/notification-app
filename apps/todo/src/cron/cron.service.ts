@@ -2,7 +2,6 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { DatabaseService } from '../database/database.service';
 import { ClientProxy } from '@nestjs/microservices';
-import { NotificationDto } from 'libs/common';
 import { Observable, tap } from 'rxjs';
 import { Item, PrismaPromise } from '@prisma/client';
 
@@ -22,7 +21,7 @@ export class CronService {
       where: { 
         deadline: { gte: dateFrom, lte: dateTo }, 
         done: false, 
-        NOT: { cases: { some: {id: 1}}}
+        NOT: { cases: { some: { id: 1 }}}
       },
       select: { userId: true, title: true, id: true, cases: true },
     })
@@ -30,13 +29,13 @@ export class CronService {
     if (deadlines.length == 0) return
 
     let updateManyTransaction: PrismaPromise<Item>[] = []
-
+    
     deadlines.forEach(async (item) => {
       this.notify(item).pipe(tap(res => this.logger.log(res)))
 
       updateManyTransaction.push(this.dbService.item.update({
         where: {id: item.id},
-        data: { cases: { set: [{id: 1}] }}
+        data: { cases: { set: [{ id: 1 }] }}
       }))
     })
 

@@ -1,4 +1,4 @@
-import { Inject, Logger, UnauthorizedException } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody } from '@nestjs/websockets';
@@ -9,7 +9,7 @@ import { Socket, Server } from 'socket.io'
 export class NotificationGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server
-  private logger: Logger = new Logger('AppGateway')
+  private logger: Logger = new Logger('NotificationGateway')
 
   constructor(@Inject('AUTH') private authClient: ClientProxy, private readonly configService: ConfigService){}
 
@@ -40,7 +40,6 @@ export class NotificationGateway implements OnGatewayInit, OnGatewayConnection, 
       const token = socket.handshake.auth.token
     */
     const token = socket.handshake.headers.authorization
-    console.log(token)
 
     const userId = await lastValueFrom(this.authClient.send('validate_user', { Authentication: token})
       .pipe(
@@ -50,6 +49,10 @@ export class NotificationGateway implements OnGatewayInit, OnGatewayConnection, 
     )
 
     return userId
+  }
+
+  notify<T>(room: string, event: string, data: T): void {
+    this.server.to(room).emit(event, data);
   }
 }
 
